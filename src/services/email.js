@@ -3,35 +3,41 @@ const fs = require("fs");
 const path = require("path");
 const { templatesPath } = require("../data/constants");
 
-async function createTransport() {
-  const transport = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-      user: process.env.MAILTRAP_USER,
-      pass: process.env.MAILTRAP_PASS,
-    },
-  });
+const mailtrapTransporter = nodemailer.createTransport({
+  host: "smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: process.env.MAILTRAP_USER,
+    pass: process.env.MAILTRAP_PASS,
+  },
+});
 
-  return transport;
-}
+const gmailTransporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS,
+  },
+});
 
 const MailService = {
-  transport: null,
+  transport: gmailTransporter,
 
   async sendMail(to, subject, html) {
-    if (!this.transport) {
-      this.transport = await createTransport();
+    try {
+      const response = await this.transport.sendMail({
+        from: process.env.MAIL_FROM,
+        to,
+        html,
+        subject,
+      });
+
+      return response;
+    } catch (error) {
+      console.log(error);
+
+      throw error;
     }
-
-    const response = await this.transport.sendMail({
-      from: "thumendess@gmail.com",
-      to,
-      html,
-      subject,
-    });
-
-    return response;
   },
 
   template(name, config) {
