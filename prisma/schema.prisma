@@ -42,6 +42,9 @@ model ResetPasswordToken {
   status ResetPasswordTokenStatus @default(PENDING)
   user   User?                    @relation(fields: [userId], references: [id])
   userId Int?
+
+
+  @@map("reset_password_tokens")
 }
 
 model Room {
@@ -52,6 +55,8 @@ model Room {
   messages  Message[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now()) @updatedAt
+
+  @@map("rooms")
 }
 
 model UserRoom {
@@ -83,15 +88,21 @@ enum ConfirmTokenStatus {
   PENDING
   CONFIRMED
   EXPIRED
+
+  @@map("confirm_token_statuses")
 }
 
 enum ResetPasswordTokenStatus {
   PENDING
   CONFIRMED
   EXPIRED
+
+  @@map("reset_password_token_statuses")
 }
 
 enum UserStatus {
   ACTIVE
   PENDING
+
+  @@map("user_statuses")
 }
