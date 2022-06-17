@@ -182,12 +182,16 @@ const UserRepository = {
     });
   },
 
-  async findUserRooms(id) {
+  async findUserRooms(id, filter) {
     id = Number(id);
 
-    return await prisma.room.findMany({
-      where: { users: { some: { userId: id } } },
-    });
+    const where = { users: { some: { userId: id } } };
+
+    if (filter) {
+      where.OR = [{ name: { contains: filter } }, { code: { contains: filter } }];
+    }
+
+    return await prisma.room.findMany({ where });
   },
 
   async addUserToRoom(userId, code) {

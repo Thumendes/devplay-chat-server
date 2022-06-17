@@ -38,4 +38,6 @@ function getFullUrl(request, { withPath } = { withPath: false }) {
   return `${request.protocol}://${request.get("host")}${withPath ? request.originalUrl : ""}`;
 }
 
-module.exports = { createRandomCode, getFullUrl };
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+module.exports = { createRandomCode, getFullUrl, sleep };

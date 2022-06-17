@@ -118,8 +118,9 @@ const UsersController = {
     }
   },
 
-  async findUserRooms({ params }, res) {
-    const rooms = await UserRepository.findUserRooms(params.id);
+  async findUserRooms({ params, query }, res) {
+    const { filter } = query;
+    const rooms = await UserRepository.findUserRooms(params.id, filter);
 
     return res.json(rooms);
   },

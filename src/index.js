@@ -8,11 +8,13 @@ const createSocketServer = require("./socket");
 const route = require("./routes");
 const prisma = require("./services/database");
 const { staticEndpoint, uploadsPath } = require("./data/constants");
+const latencyMiddleware = require("./services/middlewares/latency");
 
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 
+app.use(latencyMiddleware(500));
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
